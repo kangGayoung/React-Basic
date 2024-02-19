@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MyButton from "./MyButton";
 import { useNavigate } from "react-router-dom";
 import DiaryItem from "./DiaryItem";
@@ -15,7 +15,7 @@ const filterOptionList = [
 ];
 
 //정렬기능
-const ControlMenu = ({ value, onChange, optionList }) => {
+const ControlMenu = React.memo(({ value, onChange, optionList }) => {
   return (
     <select
       className="ControlMenu"
@@ -30,7 +30,11 @@ const ControlMenu = ({ value, onChange, optionList }) => {
       ))}
     </select>
   );
-};
+});
+/*React.memo ->컴포넌트를 감싸주면=컴포넌트를 리액트 메모의 인자로 전달하면
+강화된 컴포넌틀를 돌려줌
+=>전달받은 프롭이 변화가 없으면 렌더링 되지않게 메모제이션
+*/
 
 const DiaryList = ({ diaryList }) => {
   const navigate = useNavigate(); //링크 태그 아닌데 페이지 이동할때
