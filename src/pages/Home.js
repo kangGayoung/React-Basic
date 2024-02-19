@@ -29,6 +29,9 @@ const Home = () => {
         curDate.getFullYear(),
         curDate.getMonth() + 1,
         0,
+        23,
+        59,
+        59, // 23,59,59 ->new Date() 는 마지막 시분초도 설정해야 마지막 날짜가 화면에 보여짐
       ).getTime();
 
       // 업데이트 되는 리스트 범위 설정

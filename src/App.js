@@ -1,12 +1,13 @@
-import React, { useReducer, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, json } from "react-router-dom";
 import Home from "./pages/Home";
 import New from "./pages/New";
 import Edit from "./pages/Edit";
 import Diary from "./pages/Diary";
 
 // 기본 상태값
+// reducer에서 상태값 state 바뀔때마다 로컬스토리지에 데이터를 넣어주면 됨
 const reducer = (state, action) => {
   let newState = [];
   switch (action.type) {
@@ -33,6 +34,9 @@ const reducer = (state, action) => {
     default:
       return state;
   }
+
+  localStorage.setItem("diary", JSON.stringify(newState));
+  // /JSON.stringify() 배열이기 때문에 직렬화로 변환
   return newState;
 };
 
@@ -40,32 +44,42 @@ const reducer = (state, action) => {
 export const DiaryStateContext = React.createContext();
 export const DiaryDispatchContext = React.createContext();
 
-const dummyData = [
-  {
-    id: 1,
-    emotion: 1,
-    content: "오늘의 일기 1번",
-    date: 1706792058286,
-  },
-  {
-    id: 2,
-    emotion: 2,
-    content: "오늘의 일기 2번",
-    date: 1706792058287,
-  },
-  {
-    id: 3,
-    emotion: 3,
-    content: "오늘의 일기 3번",
-    date: 1706792058288,
-  },
-];
-
 function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData);
+  const [data, dispatch] = useReducer(reducer, []);
+
+  //로컬스토리지 저장방법
+  /*
+  useEffect(() => {
+    localStorage.setItem("item1", 10);
+    localStorage.setItem("item2", "20");
+    localStorage.setItem("item3", JSON.stringify({ value: 30 }));
+  });
+  //로컬스토리지 값 가져오기
+  useEffect(() => {
+    const item1 = localStorage.getItem("item1");
+    const item2 = localStorage.getItem("item2");
+    const item3 = JSON.parse(localStorage.getItem("item3")); //객체 변환
+    console.log({ item1, item2, item3 });
+  }, []);*/
 
   //console.log(new Date().getTime()); // 현재 밀리초 구하는 방법
 
+  useEffect(() => {
+    const localData = localStorage.getItem("diary");
+    if (localData) {
+      const diaryList = JSON.parse(localData).sort(
+        (a, b) => parseInt(b.id) - parseInt(a.id),
+      );
+      dataId.current = parseInt(diaryList[0].id) + 1;
+
+      // console.log(diaryList);
+      // console.log(dataId);
+
+      //초기값으로 설정해주는 액션
+      dispatch({ type: "INIT", data: diaryList });
+    }
+  }, []);
+  //const dataId = useRef(0); -> 더미데이터 사용시 이미 데이터가 3까지 있는데 초기값이 0이면 중복 키값이 생겨서 에러
   const dataId = useRef(0);
 
   // dispatch 변화하는 상태값 넘겨주는
@@ -108,7 +122,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/new" element={<New />} />
-              <Route path="/edit" element={<Edit />} />
+              <Route path="/edit/:id" element={<Edit />} />
               <Route path="/diary/:id" element={<Diary />} />
             </Routes>
           </div>
