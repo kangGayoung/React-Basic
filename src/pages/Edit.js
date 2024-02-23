@@ -12,6 +12,12 @@ const Edit = () => {
 
   const diaryList = useContext(DiaryStateContext);
 
+  // 페이지탭 title 변경
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `감정 일기장 - ${id}번 일기 수정`;
+  }, []);
+
   // mount 될때 id 값과 일치하는 list data 가져오기
   useEffect(() => {
     if (diaryList.length >= 1) {

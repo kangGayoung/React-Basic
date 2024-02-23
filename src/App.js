@@ -70,13 +70,12 @@ function App() {
       const diaryList = JSON.parse(localData).sort(
         (a, b) => parseInt(b.id) - parseInt(a.id),
       );
-      dataId.current = parseInt(diaryList[0].id) + 1;
 
-      // console.log(diaryList);
-      // console.log(dataId);
-
-      //초기값으로 설정해주는 액션
-      dispatch({ type: "INIT", data: diaryList });
+      if (diaryList.length >= 1) {
+        dataId.current = parseInt(diaryList[0].id) + 1;
+        //초기값으로 설정해주는 액션
+        dispatch({ type: "INIT", data: diaryList });
+      }
     }
   }, []);
   //const dataId = useRef(0); -> 더미데이터 사용시 이미 데이터가 3까지 있는데 초기값이 0이면 중복 키값이 생겨서 에러

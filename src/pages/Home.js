@@ -10,6 +10,12 @@ const Home = () => {
 
   const [data, setData] = useState([]); // 날짜에 해당하는 월에 다이어리 리스트만 받아오기
 
+  // 페이지탭 title 변경
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `감정 일기장`;
+  }, []);
+
   // 날짜 저장
   const [curDate, setCureDate] = useState(new Date());
   // getMonth()-> 0월 부터 시작

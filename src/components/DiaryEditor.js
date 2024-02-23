@@ -28,6 +28,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
 
   // 감정아이템에 클릭 이벤트
+  //useCallback 재사용을 위한 메모제이션
   const handleClickEmote = useCallback((emotion) => {
     setEmotion(emotion);
   }, []);
